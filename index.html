@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数理舎 | 数学・算数専門オンライン塾</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Sans+JP:wght@300;400;500&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f5f8ff;
+  --bg2:       #eef2fb;
+  --bg3:       #e4ecf8;
+  --bg4:       #d6e3f5;
+  --cyan:      #1a6fd4;
+  --cyan-dim:  #4a8fd8;
+  --cyan-pale: rgba(26,111,212,0.08);
+  --cyan-glow: rgba(26,111,212,0.18);
+  --gold:      #f59e0b;
+  --gold-dim:  #d97706;
+  --text:      #0f1f3d;
+  --text-mid:  #3d5278;
+  --text-dim:  #8097b8;
+  --line:      rgba(26,111,212,0.1);
+  --line-cyan: rgba(26,111,212,0.18);
+  --radius:    3px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  line-height: 1.85;
+  overflow-x: hidden;
+}
+
+/* ── GRID TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(26,111,212,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,111,212,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(245,248,255,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 6vw;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  display: flex; flex-direction: column;
+  text-decoration: none;
+  line-height: 1;
+}
+.logo-ja {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 500;
+  font-size: 1.3rem;
+  color: var(--text);
+  letter-spacing: 0.15em;
+}
+.logo-en {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--text-mid);
+  letter-spacing: 0.14em;
+  font-weight: 400;
+  margin-top: 4px;
+}
+nav { display: flex; gap: 2rem; align-items: center; }
+nav a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--cyan); }
+.btn-nav {
+  background: transparent;
+  border: 1px solid var(--cyan-dim);
+  color: var(--cyan) !important;
+  padding: 0.42em 1.2em;
+  border-radius: var(--radius);
+  transition: background 0.2s, box-shadow 0.2s !important;
+}
+.btn-nav:hover {
+  background: var(--cyan-pale) !important;
+  box-shadow: 0 0 16px var(--cyan-glow) !important;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr min(36vw, 400px);
+  align-items: center;
+  gap: 4rem;
+  padding: 120px 6vw 80px;
+  position: relative; overflow: hidden;
+}
+
+/* decorative geometry */
+.hero-geo {
+  position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 520px; height: 520px;
+  pointer-events: none; z-index: 1;
+  opacity: 0.12;
+}
+.hero-geo circle, .hero-geo line, .hero-geo polygon {
+  stroke: var(--cyan); fill: none; stroke-width: 0.8;
+}
+
+.hero-left { position: relative; z-index: 2; }
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  color: var(--cyan);
+  margin-bottom: 1.6rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.hero-tag::before {
+  content: '';
+  display: inline-block;
+  width: 28px; height: 1px;
+  background: var(--cyan);
+}
+.hero-h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.8rem, 5.5vw, 4.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.hero-h1 .accent {
+  color: var(--cyan);
+  display: block;
+}
+.hero-sub {
+  font-size: 1rem;
+  color: var(--text-mid);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+.hero-lead {
+  font-size: 0.86rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 2.8rem;
+  padding-left: 1.1em;
+  border-left: 2px solid var(--bg4);
+  line-height: 2;
+}
+.hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+.cta-main {
+  background: var(--cyan);
+  color: var(--bg);
+  padding: 0.8em 2.2em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.cta-main:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(77,217,192,0.3);
+}
+.cta-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border-bottom: 1px solid var(--text-dim);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cta-sub:hover { color: var(--cyan); border-color: var(--cyan); }
+
+.hero-right { position: relative; z-index: 2; }
+.hero-formula-box {
+  background: var(--bg3);
+  border: 1px solid var(--line-cyan);
+  border-radius: 6px;
+  padding: 2rem 1.8rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-formula-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+}
+.formula-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+  margin-bottom: 1.2rem;
+  opacity: 0.7;
+}
+.formula-line {
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 2.2;
+  font-weight: 300;
+}
+.formula-line .kw { color: var(--cyan); }
+.formula-line .op { color: var(--gold); }
+.formula-line .cm { color: var(--text-dim); font-style: italic; }
+.formula-cursor {
+  display: inline-block;
+  width: 2px; height: 1em;
+  background: var(--cyan);
+  vertical-align: middle;
+  animation: blink 1.2s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── DIVIDER ── */
+.div-line {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 0;
+  position: relative; z-index: 2;
+}
+
+/* ── COMMON SECTION ── */
+section {
+  padding: 96px 6vw;
+  position: relative; z-index: 2;
+}
+.s-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--cyan);
+  margin-bottom: 0.9rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.s-label::before {
+  content: '//';
+  opacity: 0.5;
+}
+.s-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.4rem;
+  color: var(--text);
+}
+.s-lead {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  max-width: 560px;
+  line-height: 2;
+}
+
+/* ── PAIN ── */
+.pain { background: var(--bg2); }
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 3rem;
+}
+.pain-cell {
+  background: var(--bg2);
+  padding: 1.5rem 1.6rem;
+  display: flex; align-items: flex-start; gap: 0.9rem;
+  transition: background 0.2s;
+}
+.pain-cell:hover { background: var(--bg3); }
+.pain-idx {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--cyan);
+  opacity: 0.6;
+  flex-shrink: 0;
+  padding-top: 0.25rem;
+  letter-spacing: 0.08em;
+}
+.pain-txt { font-size: 0.87rem; color: var(--text-mid); line-height: 1.8; }
+.pain-note {
+  margin-top: 2.4rem;
+  padding: 1.5rem 2rem;
+  background: var(--bg3);
+  border-left: 2px solid var(--cyan-dim);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.87rem;
+  color: var(--text-mid);
+  line-height: 2;
+}
+.pain-note strong { color: var(--cyan); font-weight: 400; }
+
+/* ── FEATURES ── */
+.features { background: var(--bg); }
+.feat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 3rem;
+}
+.feat-card {
+  background: var(--bg);
+  padding: 2.4rem 2.2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+}
+.feat-card:hover { background: var(--bg2); }
+.feat-card::before {
+  content: attr(data-num);
+  position: absolute; top: 1.6rem; right: 1.8rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--line);
+  line-height: 1;
+  pointer-events: none;
+  transition: color 0.25s;
+}
+.feat-card:hover::before { color: rgba(77,217,192,0.06); }
+.feat-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+  opacity: 0.8;
+  margin-bottom: 0.7rem;
+}
+.feat-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.9rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+.feat-desc {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-bottom: 1.2rem;
+}
+.feat-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--cyan-dim);
+  background: rgba(77,217,192,0.06);
+  border: 1px solid rgba(77,217,192,0.15);
+  border-radius: 2px;
+  padding: 0.22em 0.65em;
+}
+
+/* photo placeholder inside card */
+.feat-photo {
+  margin-top: 1.4rem;
+  height: 140px;
+  background: var(--bg3);
+  border: 1px dashed rgba(26,111,212,0.2);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.4rem;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.1em;
+}
+.feat-photo svg { opacity: 0.25; }
+
+/* ── ABOUT ── */
+.about { background: var(--bg2); }
+.about-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  margin-top: 3.5rem;
+  align-items: start;
+}
+.about-visual {
+  position: relative;
+  aspect-ratio: 1;
+}
+.about-visual svg {
+  width: 100%; height: 100%;
+  overflow: visible;
+}
+.about-text p {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 2.2;
+  margin-bottom: 1.2rem;
+}
+.about-text strong { color: var(--text); font-weight: 400; }
+.about-quote {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 2rem;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--cyan);
+}
+
+/* ── TARGET ── */
+.target { background: var(--bg); }
+.target-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2.6rem;
+}
+.target-item {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.6rem;
+  display: flex; align-items: center; gap: 1rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+.target-item:hover {
+  border-color: var(--line-cyan);
+  background: var(--bg3);
+}
+.target-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+.target-name { font-size: 0.87rem; color: var(--text-mid); letter-spacing: 0.06em; }
+
+/* ── FLOW ── */
+.flow { background: var(--bg2); }
+.flow-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 3.5rem;
+  position: relative;
+}
+.flow-row::before {
+  content: '';
+  position: absolute;
+  top: 24px; left: 24px; right: 24px;
+  height: 1px;
+  background: var(--line-cyan);
+}
+.flow-item {
+  padding: 0 1rem;
+  text-align: center;
+  position: relative; z-index: 1;
+}
+.flow-dot {
+  width: 48px; height: 48px;
+  border: 1px solid var(--line-cyan);
+  background: var(--bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--cyan);
+  font-weight: 400;
+}
+.flow-t { font-size: 0.83rem; font-weight: 500; color: var(--text); margin-bottom: 0.3rem; letter-spacing: 0.04em; }
+.flow-d { font-size: 0.76rem; color: var(--text-dim); line-height: 1.7; }
+
+/* ── CTA ── */
+.cta-sect {
+  background: var(--cyan);
+  border-top: none;
+  border-bottom: none;
+  text-align: center;
+  padding: 96px 6vw;
+  position: relative; overflow: hidden;
+}
+.cta-sect::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  pointer-events: none;
+}
+.cta-sect::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  pointer-events: none;
+}
+.cta-sect .s-label { justify-content: center; color: rgba(255,255,255,0.7); }
+.cta-sect .s-label::before { color: rgba(255,255,255,0.4); }
+.cta-headline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 1rem;
+  position: relative; z-index: 1;
+}
+.cta-body {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 2.5rem;
+  line-height: 2;
+  position: relative; z-index: 1;
+}
+.cta-big-btn {
+  display: inline-block;
+  background: #fff;
+  color: var(--cyan);
+  padding: 0.9em 3em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  position: relative; z-index: 1;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.cta-big-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+.cta-small { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: rgba(255,255,255,0.55); letter-spacing: 0.14em; margin-top: 1.2rem; position: relative; z-index: 1; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  padding: 3.5rem 6vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  position: relative; z-index: 2;
+}
+.foot-logo { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.15em; color: var(--text); }
+.foot-sub { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.18em; margin-top: 3px; }
+.foot-links { display: flex; gap: 1.5rem; }
+.foot-links a { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+.foot-links a:hover { color: var(--cyan); }
+.foot-copy { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; }
+
+/* ── ANIMATIONS ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.vis { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; padding-top: 100px; }
+  .hero-right { display: none; }
+  nav a:not(.btn-nav) { display: none; }
+  .pain-grid { grid-template-columns: 1fr; }
+  .feat-grid { grid-template-columns: 1fr; }
+  .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .about-visual { display: none; }
+  .flow-row { grid-template-columns: 1fr 1fr; row-gap: 2.5rem; }
+  .flow-row::before { display: none; }
+  footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <a class="logo" href="#">
+    <span class="logo-ja">数理舎</span>
+    <span class="logo-en">SURI-SHA | 数学・算数専門塾</span>
+  </a>
+  <nav>
+    <a href="#features">指導内容</a>
+    <a href="#about">塾について</a>
+    <a href="#target">対象</a>
+    <a href="#trial" class="btn-nav">無料体験授業</a>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <!-- decorative SVG geometry -->
+  <svg class="hero-geo" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="260" cy="260" r="240"/>
+    <circle cx="260" cy="260" r="160"/>
+    <circle cx="260" cy="260" r="80"/>
+    <line x1="20" y1="260" x2="500" y2="260"/>
+    <line x1="260" y1="20" x2="260" y2="500"/>
+    <line x1="75" y1="75" x2="445" y2="445"/>
+    <line x1="445" y1="75" x2="75" y2="445"/>
+    <polygon points="260,50 460,400 60,400"/>
+    <polygon points="260,470 460,120 60,120"/>
+  </svg>
+
+  <div class="hero-left">
+    <p class="hero-tag">数学・算数専門オンライン塾</p>
+    <h1 class="hero-h1">
+      数学は、<br>暗記ではなく
+      <span class="accent">"思考"だ。</span>
+    </h1>
+    <p class="hero-sub">考え方から伸ばす数学・算数専門塾。</p>
+    <p class="hero-lead">
+      MARCH・地方国立を目指す中高生へ。<br>
+      数理舎は、数学・算数に特化したオンライン専門塾です。
+    </p>
+    <div class="hero-ctas">
+      <a href="#trial" class="cta-main">無料体験授業を申し込む</a>
+      <a href="#features" class="cta-sub">指導内容を見る →</a>
+    </div>
+  </div>
+
+  <!-- <div class="hero-right">
+    <div class="hero-formula-box">
+      <p class="formula-label">// THINKING PROCESS</p>
+      <div class="formula-line"><span class="kw">条件</span> <span class="op">→</span> 整理する</div>
+      <div class="formula-line"><span class="kw">図式化</span> <span class="op">→</span> 可視化する</div>
+      <div class="formula-line"><span class="kw">解法</span> <span class="op">→</span> <span class="cm">なぜ？</span></div>
+      <div class="formula-line"><span class="kw">検算</span> <span class="op">→</span> 根拠を確認</div>
+      <div class="formula-line"><span class="kw">理解</span> <span class="op">∴</span> 初見問題へ <span class="formula-cursor"></span></div>
+    </div>
+  </div> -->
+</section>
+
+<hr class="div-line">
+
+<!-- ══ PAIN ══ -->
+<section class="pain reveal" id="pain">
+  <p class="s-label">よくある悩み</p>
+  <h2 class="s-title">数学が苦手になる原因は、<br>"理解不足"です。</h2>
+  <p class="s-lead">解法暗記では、本当の得点力にはつながりません。<br>数理舎では思考プロセスから丁寧に指導します。</p>
+  <div class="pain-grid">
+    <div class="pain-cell"><span class="pain-idx">01</span><p class="pain-txt">公式を覚えても問題が解けない</p></div>
+    <div class="pain-cell"><span class="pain-idx">02</span><p class="pain-txt">応用問題になると止まってしまう</p></div>
+    <div class="pain-cell"><span class="pain-idx">03</span><p class="pain-txt">テストになると点が取れない</p></div>
+    <div class="pain-cell"><span class="pain-idx">04</span><p class="pain-txt">解説を読んでもわからない</p></div>
+    <div class="pain-cell"><span class="pain-idx">05</span><p class="pain-txt">勉強しているのに伸びない</p></div>
+    <div class="pain-cell"><span class="pain-idx">06</span><p class="pain-txt">どこで詰まっているか自分でわからない</p></div>
+  </div>
+  <div class="pain-note">
+    数理舎では、<strong>条件整理・図式化・思考プロセス・解法選択・ミス分析</strong>まで丁寧に指導します。<br>
+    数学で重要なのは、解法暗記ではなく、<strong>思考の流れ</strong>です。
+  </div>
+</section>
+
+<hr class="div-line">
+
+<!-- ══ FEATURES ══ -->
+<section class="features" id="features">
+  <p class="s-label reveal">数理舎の指導</p>
+  <h2 class="s-title reveal">「なぜ」を理解すれば、<br>初見問題にも対応できる。</h2>
+  <div class="feat-grid reveal" style="transition-delay:0.1s">
+
+    <div class="feat-card" data-num="01">
+      <p class="feat-tag">UNDERSTAND</p>
+      <h3 class="feat-title">「なぜ」を理解する授業</h3>
+      <p class="feat-desc">なぜその式になるのか。なぜその解法を選ぶのか。答えだけを教える授業は行いません。思考の流れを理解することで、初見問題にも対応できる力を育てます。</p>
+      <div class="feat-chips">
+        <span class="chip">思考プロセス</span>
+        <span class="chip">解法選択</span>
+        <span class="chip">本質理解</span>
+      </div>
+      <div class="feat-photo">
+        <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>授業・板書の写真</span>
+      </div>
+    </div>
+
+    <div class="feat-card" data-num="02">
+      <p class="feat-tag">DENSITY</p>
+      <h3 class="feat-title">少人数・高密度授業</h3>
+      <p class="feat-desc">長時間授業ではなく、集中して理解する授業。数理舎では、短時間でも"深く理解すること"を重視しています。効率よく、しかし本質的に。それが数理舎のスタイルです。</p>
+      <div class="feat-chips">
+        <span class="chip">少人数制</span>
+        <span class="chip">オンライン完結</span>
+        <span class="chip">集中型</span>
+      </div>
+      <div class="feat-photo">
+        <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>オンライン授業の様子</span>
+      </div>
+    </div>
+
+    <div class="feat-card" data-num="03">
+      <p class="feat-tag">TARGET</p>
+      <h3 class="feat-title">MARCH・地方国立レベルに最適化</h3>
+      <p class="feat-desc">必要以上に難しすぎる問題ではなく、合格に必要な力を確実に積み上げます。定期テスト〜入試標準・共通テスト・記述・思考力問題まで幅広く対応します。</p>
+      <div class="feat-chips">
+        <span class="chip">共通テスト</span>
+        <span class="chip">記述問題</span>
+        <span class="chip">思考力問題</span>
+      </div>
+      <div class="feat-photo">
+        <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>テキスト・問題集の写真</span>
+      </div>
+    </div>
+
+    <div class="feat-card" data-num="04">
+      <p class="feat-tag">OPTION</p>
+      <h3 class="feat-title">理科オプションにも対応</h3>
+      <p class="feat-desc">数学と理科は密接につながっています。希望者には物理・化学・理科基礎・中学理科なども提供。「理解する力」を教科横断で育てます。</p>
+      <div class="feat-chips">
+        <span class="chip">物理</span>
+        <span class="chip">化学</span>
+        <span class="chip">生物</span>
+        <span class="chip">地学</span>
+        <span class="chip">理科基礎</span>
+        <span class="chip">中学理科</span>
+      </div>
+      <div class="feat-photo">
+        <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>理科テキスト・実験写真</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="div-line">
+
+<!-- ══ ABOUT ══ -->
+<section class="about" id="about">
+  <p class="s-label reveal">塾名に込めた想い</p>
+  <div class="about-inner reveal" style="transition-delay:0.1s">
+    <div class="about-visual" aria-hidden="true">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .geo-stroke { fill: none; stroke: rgba(26,111,212,0.2); stroke-width: 0.8; }
+            .geo-stroke-bright { fill: none; stroke: rgba(26,111,212,0.5); stroke-width: 1; }
+            .geo-dot { fill: rgba(26,111,212,0.6); }
+            .geo-label { font-family: 'DM Mono', monospace; font-size: 10px; fill: rgba(26,111,212,0.55); }
+          </style>
+        </defs>
+        <!-- outer grid -->
+        <line x1="0" y1="100" x2="400" y2="100" class="geo-stroke"/>
+        <line x1="0" y1="200" x2="400" y2="200" class="geo-stroke"/>
+        <line x1="0" y1="300" x2="400" y2="300" class="geo-stroke"/>
+        <line x1="100" y1="0" x2="100" y2="400" class="geo-stroke"/>
+        <line x1="200" y1="0" x2="200" y2="400" class="geo-stroke"/>
+        <line x1="300" y1="0" x2="300" y2="400" class="geo-stroke"/>
+        <!-- main triangle -->
+        <polygon points="200,40 360,340 40,340" class="geo-stroke-bright"/>
+        <!-- inscribed circle -->
+        <circle cx="200" cy="247" r="93" class="geo-stroke-bright"/>
+        <!-- circumscribed circle -->
+        <circle cx="200" cy="173" r="167" class="geo-stroke"/>
+        <!-- altitude lines -->
+        <line x1="200" y1="40" x2="200" y2="340" stroke="rgba(26,111,212,0.18)" stroke-width="0.8" stroke-dasharray="4 4"/>
+        <line x1="40" y1="340" x2="280" y2="107" stroke="rgba(26,111,212,0.18)" stroke-width="0.8" stroke-dasharray="4 4"/>
+        <line x1="360" y1="340" x2="120" y2="107" stroke="rgba(26,111,212,0.18)" stroke-width="0.8" stroke-dasharray="4 4"/>
+        <!-- dots -->
+        <circle cx="200" cy="40" r="3" class="geo-dot"/>
+        <circle cx="360" cy="340" r="3" class="geo-dot"/>
+        <circle cx="40" cy="340" r="3" class="geo-dot"/>
+        <circle cx="200" cy="247" r="3" fill="rgba(26,111,212,0.9)"/>
+        <!-- labels -->
+        <text x="196" y="28" class="geo-label" text-anchor="middle">A</text>
+        <text x="374" y="346" class="geo-label">B</text>
+        <text x="24" y="346" class="geo-label">C</text>
+        <text x="210" y="252" class="geo-label">I</text>
+        <text x="205" y="380" class="geo-label" text-anchor="middle">内接円の中心</text>
+      </svg>
+    </div>
+    <div>
+      <p class="about-quote">筋道を立てて考える力——<br>それが"数理"の意味。</p>
+      <div class="about-text">
+        <p>「数理舎」の<strong>"数理"</strong>とは、計算力だけではなく、<strong>"筋道を立てて考える力"</strong>を表しています。</p>
+        <p>数学・算数は、暗記ではなく理解の積み重ねです。公式を覚えるだけでは、本当の得点力にはつながりません。</p>
+        <p>なぜその式になるのか。どう考えれば解けるのか。どこで条件を整理するのか——数理舎では、問題を解く技術だけでなく、<strong>"自分で考え抜く力"</strong>を育てます。</p>
+        <p><strong>「舎」</strong>には、静かに思考し、本質を学ぶ場所という意味を込めました。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div-line">
+
+<!-- ══ TARGET ══ -->
+<section class="target" id="target">
+  <p class="s-label reveal">対象</p>
+  <h2 class="s-title reveal">こんな生徒に来てほしい</h2>
+  <p class="s-lead reveal">小学5年生〜高校3年生まで。数学を得点源にしたいすべての生徒へ。<br>※ 小4以下の場合もお気軽にご相談ください。</p>
+  <div class="target-list reveal" style="transition-delay:0.12s">
+    <div class="target-item"><span class="target-dot"></span><span class="target-name">MARCH志望の生徒</span></div>
+    <div class="target-item"><span class="target-dot"></span><span class="target-name">地方国立志望の生徒</span></div>
+    <div class="target-item"><span class="target-dot"></span><span class="target-name">小5生〜高3生</span></div>
+    <div class="target-item"><span class="target-dot"></span><span class="target-name">数学を得点源にしたい</span></div>
+    <div class="target-item"><span class="target-dot"></span><span class="target-name">基礎から本質理解をしたい</span></div>
+  </div>
+</section>
+
+<hr class="div-line">
+
+<!-- ══ FLOW ══ -->
+<section class="flow" id="flow">
+  <p class="s-label reveal">入塾までの流れ</p>
+  <h2 class="s-title reveal">はじめての方へ</h2>
+  <div class="flow-row reveal" style="transition-delay:0.1s">
+    <div class="flow-item">
+      <div class="flow-dot">01</div>
+      <p class="flow-t">お問い合わせ</p>
+      <p class="flow-d">フォームからお気軽にご連絡ください</p>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">02</div>
+      <p class="flow-t">無料体験授業</p>
+      <p class="flow-d">実際の授業をオンラインで体験いただけます</p>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">03</div>
+      <p class="flow-t">カウンセリング</p>
+      <p class="flow-d">現状と目標をヒアリングし最適なプランをご提案</p>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">04</div>
+      <p class="flow-t">入塾・授業開始</p>
+      <p class="flow-d">考え方が変わる授業をここから始めます</p>
+    </div>
+  </div>
+</section>
+
+<hr class="div-line">
+
+<!-- ══ CTA ══ -->
+<section class="cta-sect" id="trial">
+  <p class="s-label">無料体験授業</p>
+  <p class="cta-headline">「数学は暗記だと<br>思っていた」</p>
+  <p class="cta-body">
+    そんな生徒ほど、理解の変化を実感しています。<br>
+    考え方が変われば、数学は変わる。
+  </p>
+  <a href="#" class="cta-big-btn">無料体験授業に申し込む</a>
+  <p class="cta-small">※ オンライン開催。費用は一切かかりません。</p>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div>
+    <p class="foot-logo">数理舎</p>
+    <p class="foot-sub">SURI-SHA / MATH &amp; SCIENCE ONLINE SCHOOL</p>
+  </div>
+  <div class="foot-links">
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">特定商取引法に基づく表記</a>
+    <a href="#">お問い合わせ</a>
+  </div>
+  <p class="foot-copy">© 2026 数理舎 All rights reserved.</p>
+</footer>
+
+<script>
+const els = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+els.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
